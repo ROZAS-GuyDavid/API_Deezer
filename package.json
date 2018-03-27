@@ -1,0 +1,26 @@
+{
+  "name": "projet-deezer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "./node_modules/.bin/static"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ROZAS-GuyDavid/API_Deezer.git"
+  },
+  "author": "Guy-David",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ROZAS-GuyDavid/API_Deezer/issues"
+  },
+  "homepage": "https://github.com/ROZAS-GuyDavid/API_Deezer#readme",
+  "devDependencies": {
+    "node-static": "^0.7.10"
+  },
+  "dependencies": {
+    "vue": "^2.5.16"
+  }
+}

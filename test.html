@@ -1,0 +1,22 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="http://unpkg.com/jquery"></script>
+    <script>
+        'use strict';
+            $('#search').on('click', function(event){
+                event.preventDefault();    // preventDefault() empenche le navigateur de naviger vers le liens href
+                var search="https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=" + $('#search').val();
+                var requette = $.ajax(search);
+
+                requette.done(function(reponse){
+                    $('#test').text(data.id);
+                    console.log('hey');
+                });
+                requette.fail(function(){
+                alert('we got a probleme. call youston');  
+                });
+        });
+    </script>
+    
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="scripts/main.js"></script>
+    
