@@ -7,119 +7,74 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <nav>
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="#">Recherche</a></li>
-                <li><a href="#">Titre</a></li>
-                <li><a href="#">Album</a></li>
-                <li><a href="#">Artist</a></li>
-                <li><a href="#">Favorits</a></li>
-            </ul>
-        </div>
-    </nav>
-    <nav>
-        <div class="nav-wrapper">
-            <form>
-                <div class="input-field">
-                    <input id="search" type="search" required >
-                    <button id="search-btn">Rechercher</button>
-                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                    <i class="material-icons">close</i>
+    
+
+    <main id="cardContainer">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Logo</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="#">Recherche</a></li>
+                    <li><a href="#">Titre</a></li>
+                    <li><a href="#">Album</a></li>
+                    <li><a href="#">Artist</a></li>
+                    <li><a href="#">Favorits</a></li>
+                </ul>
+            </div>
+        </nav>
+        <nav>
+            <div class="nav-wrapper">
+                <form>
+                    <div class="input-field">
+                        <input id="search" type="search" required >
+                        <button v-on:click.prevent="request()" id="search-btn">Rechercher</button>
+                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                        <i class="material-icons">close</i>
+                    </div>
+                </form>
+            </div>
+        </nav>
+
+        <div class="row">
+            <div v-for="(artist,index) in searchResults" class="col s4">
+                <div class="card">
+                    <div class="card-image">
+                        <img v-bind:src="artist.album.cover_big">
+                        <span class="card-title">{{artist.album.title}}</span>
+                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="card-content">
+                        <p>{{artist.artist.name}} / {{artist.album.title}}</p>
+                        <p> {{secToMin(index)}}</p>
+                    </div>
+                    <!-- <audio>
+                        <source v-bind:src=urlPreviewConstructor(index)  type="audio/wav">
+                    </audio> -->
+                    <div class="card-action">
+                        <audio controls="controls" >
+                            <source v-bind:src=urlPreviewConstructor(index)  type="audio/mp3 /">
+                        </audio>
+
+                        <div class="flex ">
+                            <a href="" class="waves-effect waves-light btn">Ecouter un extrait</a>
+                            <a href="" class="waves-effect waves-light btn">Consulter Album</a>
+                            <a href="" class="waves-effect waves-light btn">Voir la fiche de l'artiste</a>
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </nav>
 
-    <!--<div id="song-title-cards">
-            <song-card-tmpl></song-card-tmpl>
-    </div>-->
-
-    <div id="cardSong0">
-    </div>
-    <div id="cardSong1">
-    </div>
-    <div id="cardSong2">
-    </div>
-
-    <!-- <div id="cardSong0">
-        <img src="" alt="">
-        <h2></h2>
-        <p>eminem / curtain call</p>
-        <p>5m26</p>
-        <a class="waves-effect waves-light btn">button</a>
-        <a class="waves-effect waves-light btn">button</a>
-        <a class="waves-effect waves-light btn">button</a>
-    </div>
-    <div id="cardSong1">
-        <img src="" alt="">
-        <h2></h2>
-        <p>eminem / curtain call</p>
-        <p>5m26</p>
-        <a class="waves-effect waves-light btn">button</a>
-        <a class="waves-effect waves-light btn">button</a>
-        <a class="waves-effect waves-light btn">button</a>
-    </div>
-    <div id="cardSong2">
-        <img src="" alt="">
-        <h2></h2>
-        <p>eminem / curtain call</p>
-        <p>5m26</p>
-        <a class="waves-effect waves-light btn">button</a>
-        <a class="waves-effect waves-light btn">button</a>
-        <a class="waves-effect waves-light btn">button</a>
-    </div> -->
-
-
-        
-  
-            
+    </main>  
+    
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script src="http://unpkg.com/jquery"></script>
     <script src="node_modules/vue/dist/vue.js"></script>
-    <script src="scripts/main.js"></script>
-    <script>
-        'use strict';
-        var TabResults = [];
-        var MinTabResults = [];
-        var i = 0;
-        (function(){
-            $(document).ready(function(){
-                $('#search-btn').on('click', function(event){
-                    event.preventDefault();    // preventDefault() empenche le navigateur de naviger vers le liens href
-                    //console.log($('#search').val());
-                    var search="https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=" + $('#search').val();
-                    var requette = $.ajax(search);
-
-                    requette.done(function(reponse){
-                        //$('#test').text(reponse.data);
-                        //console.log(reponse.data);
-                        TabResults = reponse.data;
-                        //MinTabResults = TabResults.slice(0,3);
-                        console.log(TabResults);
-                        for(i=0; i<4; i+=1){
-                            $('#cardSong'+i).append('<img src="'+TabResults[i].album.cover_big +'" alt="">')
-                            .append('<h2>'+ TabResults[i].title +'</h2>')
-                            .append('<p>'+ TabResults[i].artist.name + ' / ' + TabResults[i].album.title +'</p>')
-                            .append('<p>'+ TabResults[i].duration +'</p>')
-                            .append('<a href="'+TabResults[i].preview+'" class="waves-effect waves-light btn">écouter un extrait</a>')
-                            .append('<a href="'+"#"+'" class="waves-effect waves-light btn">Consulter Album</a>')
-                            .append('<a href="'+TabResults[i].preview+'" class="waves-effect waves-light btn">Voir la fiche de lartiste</a>')
-                            
-                            // append child ?
-                        }
-                    });
-                    requette.fail(function(){
-                        alert('we got a probleme. call youston');  
-                    });
-                });
-            });
-        })();
-    </script>
-    
+    <script src="scripts/main.js"></script> 
 </body>
 
 </html>
