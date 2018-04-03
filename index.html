@@ -8,19 +8,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
     
 
-    <main id="cardContainer">
-        <nav>
+    <main id="app">
+         <nav>
             <div class="nav-wrapper">
                 <a href="#" class="brand-logo">Logo</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="#">Recherche</a></li>
                     <li><a href="#">Titre</a></li>
                     <li><a href="#">Album</a></li>
-                    <li><a href="#">Artist</a></li>
+                    <li><a href="artist.html">Artist</a></li>
                     <li><a href="#">Favorits</a></li>
                 </ul>
             </div>
@@ -38,8 +39,8 @@
             </div>
         </nav>
 
-        <div class="row">
-            <div v-for="(artist,index) in searchResults" class="col s4">
+        <!--<div class="row">
+            <div v-for="(artist,index) in searchresults" class="col s4">
                 <div class="card">
                     <div class="card-image">
                         <img v-bind:src="artist.album.cover_big">
@@ -50,29 +51,57 @@
                         <p>{{artist.artist.name}} / {{artist.album.title}}</p>
                         <p> {{secToMin(index)}}</p>
                     </div>
-                    <!-- <audio>
-                        <source v-bind:src=urlPreviewConstructor(index)  type="audio/wav">
-                    </audio> -->
                     <div class="card-action">
                         <audio controls="controls" >
                             <source v-bind:src=urlPreviewConstructor(index)  type="audio/mp3 /">
                         </audio>
 
                         <div class="flex ">
-                            <a href="" class="waves-effect waves-light btn">Ecouter un extrait</a>
-                            <a href="" class="waves-effect waves-light btn">Consulter Album</a>
-                            <a href="" class="waves-effect waves-light btn">Voir la fiche de l'artiste</a>
+                            <a v-on:click="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
+                            <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
+                            <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Voir la fiche de l'artist</a>
                         </div>
                     </div>
                 </div>
+            </div> -->
+            <!-- <div>
+                <div id="modal1" class="modal">
+                    <div class="modal-content">
+                        <h4>Titre : {{dataClick.title}}</h4>
+                        <a href="#">{{dataClick.title}}</a>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                    </div>
+                </div>
+            </div> -->
+            <!-- <manav></manav> -->
+            <cardcontainer v-bind:searchresults="searchresults"></cardcontainer>
+            
+            <!-- <div id="modal2" class="modal bottom-sheet">
+                <div class="modal-content">
+                <h4>Modal Header</h4>
+                <p>A bunch of text</p>
+                </div>
+                <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                </div>
             </div>
+            <div id="modal3" class="modal">
+                <div class="modal-content">
+                    <h4>Modal Header</h4>
+                    <p>A bunch of text</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                </div>
+            </div> -->
         </div>
 
     </main>  
     
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script src="http://unpkg.com/jquery"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script src="node_modules/vue/dist/vue.js"></script>
     <script src="scripts/main.js"></script> 
 </body>
