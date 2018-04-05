@@ -46,6 +46,10 @@
                                     <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
                                     <h4>{{dataClick.title}}</h4>
                                     <p>Durée :  {{secToMin()}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
+                                    <p>Ecouter un extrait :</p>
+                                    <audio controls="controls" v-if="dataClick.show">
+                                        <source v-bind:src=urlPreviewConstructor  type="audio/mp3 /">
+                                    </audio>
 
                                 </div>
                                 <div class="modal-footer">
@@ -75,7 +79,8 @@
                     title : "",
                     title_short : "",
                     title_version : "",
-                    type : ""
+                    type : "",
+                    show : false
                 },
                 infoTrack : {
                     // album : {},
@@ -103,8 +108,12 @@
                 }
             }
         },
-        filters : {
-            
+        computed : {
+            urlPreviewConstructor: function(){
+                // var urlPreview = this.searchresults[index].preview;
+                var urlPreview = this.dataClick.preview;
+                return urlPreview;
+            },
         },
         methods: {
             urlConstructorTrack: function(){
@@ -112,10 +121,6 @@
                 url = this.PartUrl1 + this.dataClick.id;
                 console.log(url);
                 return url;
-            },
-            urlPreviewConstructor: function(index){
-                var urlPreview = this.searchresults[index].preview;
-                return urlPreview;
             },
             secToMin : function(){
                 // var time = this.searchresults[index].duration;
@@ -131,11 +136,13 @@
                 return fulltime;
             },
             indexCall : function(index){
+                this.dataClick.show = false;
                 this.dataClick = this.searchresults[index];
                 // var imgLink = "url('"+ this.searchresults[index].album.cover_big +"')";
                 // $('#modal1').css({background: imgLink ,opacity:'0.5'});
+                this.dataClick.show = true;
                 this.infoTrackCall(this.getReponse);
-                // this.infoTrack = this.infoTrackCall();
+                // this.urlPreviewConstructor();
                 
             },
             infoTrackCall : function(getReponse){
@@ -165,9 +172,9 @@
             }
         },
 
-        // created : function(){
+        updated : function(){
             
-        // }
+        }
     };
 
  var elApp = new Vue({                 //la variable me sert à refencer l'object
