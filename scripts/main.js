@@ -45,7 +45,7 @@
                                     <img :src="dataClick.artist.picture_small">
                                     <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
                                     <h4>{{dataClick.title}}</h4>
-                                    <p>Durée :  {{secToMin()}} / Date de parution : </p>
+                                    <p>Durée :  {{secToMin()}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
 
                                 </div>
                                 <div class="modal-footer">
@@ -103,7 +103,9 @@
                 }
             }
         },
-
+        filters : {
+            
+        },
         methods: {
             urlConstructorTrack: function(){
                 var url = this.finalUrl;
@@ -156,6 +158,10 @@
             getReponse : function(reponse){
                 console.log(reponse);
                 this.infoTrack = reponse;
+            },
+            convertDate : function( dateString ){
+                var date = new Date(dateString);
+                return date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
             }
         },
 
