@@ -1,87 +1,24 @@
-<!-- js -->
-'use strict';
-var TabResults = [];
-var i = 0;
-
-(function(){
-    $(document).ready(function(){
-        function Recherche(){
-            var search="https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=" + $('#search').val();
-            var requette = $.ajax(search);
-
-            requette.done(function(reponse){
-                TabResults = reponse.data;
-                console.log(TabResults);
-                
-                for(i=0; i<TabResults.length; i+=1){
-                    $('#cardContainer').append('<div id="cardSong'+ i +'" class="col s4"></div>');
-                    $('#cardSong'+i).append('<div class="card"></div>');
-                    $('#cardSong'+i).children().append('<div class="card-image"><img src="'+TabResults[i].album.cover_big +'"></div>')
-                    .append('<div class="card-content"><h2>'+ TabResults[i].title +'</h2><p>'+ TabResults[i].artist.name + ' / ' + TabResults[i].album.title +'</p><p>'+ TabResults[i].duration +'</p></div>')
-                    .append('<div class="flex"><a href="'+TabResults[i].preview+'" class="waves-effect waves-light btn">écouter un extrait</a><a href="'+"#"+'" class="waves-effect waves-light btn">Consulter Album</a><a href="'+TabResults[i].preview+'" class="waves-effect waves-light btn">Voir la fiche de lartiste</a></div>');
-                    }
-            });
-            requette.fail(function(){
-                alert('we got a probleme. call youston');  
-            });
-        }
-        $('#search-btn').on('click', function(event){
-            event.preventDefault();
-            Recherche();
-        });
+request: function(){
+    var urlFinal = this.urlConstructor();
+    var requette = $.ajax(urlFinal);
+    console.log(urlFinal);
+    requette.done(function(reponse){
+        var results_json;
+        this.searchresults = reponse.data;
+        results_json = JSON.stringify(this.searchresults);               // sauvegarder dans une variable la version strigifier de mon object
+        localStorage.setItem("resultsStringify",results_json);              // sauvegarder la variable dans le localStorage
+        console.log(this.searchresults);
+        // results_json = localStorage.getItem("resultsStringify");            // dans la variable recuper la version stringifier 
+        // if (JSON.parse(results_json) === reponse.data){
+        //     this.searchresults = JSON.parse(results_json);                          // remplacer mon objet par la sauvegarde destringifier grace a parse 
+        // }
     });
-})();
-
-<!-- html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
-</head>
-<body>
-    <nav>
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="#">Recherche</a></li>
-                <li><a href="#">Titre</a></li>
-                <li><a href="#">Album</a></li>
-                <li><a href="#">Artist</a></li>
-                <li><a href="#">Favorits</a></li>
-            </ul>
-        </div>
-    </nav>
-    <nav>
-        <div class="nav-wrapper">
-            <form>
-                <div class="input-field">
-                    <input id="search" type="search" required >
-                    <button id="search-btn">Rechercher</button>
-                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                    <i class="material-icons">close</i>
-                </div>
-            </form>
-        </div>
-    </nav>
-
-    <!--<div id="song-title-cards">
-            <song-card-tmpl></song-card-tmpl>
-    </div>-->
-    <div class="wrapper">
-        <div id="cardContainer" class="row">
-        </div>
-    </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    <script src="http://unpkg.com/jquery"></script>
-    <script src="node_modules/vue/dist/vue.js"></script>
-    <script src="scripts/main.js"></script> 
-</body>
-
-</html>
+    var results_json = localStorage.getItem("resultsStringify");            // dans la variable recuper la version stringifier 
+    if(results_json === null ){
+        this.searchresults = [];
+    }else{
+        this.searchresults = JSON.parse(results_json);
+    }
+    results_json = null;
+    console.log(results_json);
+}
