@@ -22,7 +22,7 @@
                     <li><a href="#">Titre</a></li>
                     <li><a href="#">Album</a></li>
                     <li><a href="artist.html">Artist</a></li>
-                    <li><a href="#">Favorits</a></li>
+                    <li><a v-on:click.prevent="callFavPage()" id="favorits-btn" href="#">Favorits</a></li>
                 </ul>
             </div>
         </nav>
@@ -39,42 +39,13 @@
             </div>
         </nav>
 
-        <!--<div class="row">
-            <div v-for="(artist,index) in searchresults" class="col s4">
-                <div class="card">
-                    <div class="card-image">
-                        <img v-bind:src="artist.album.cover_big">
-                        <span class="card-title">{{artist.album.title}}</span>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                    </div>
-                    <div class="card-content">
-                        <p>{{artist.artist.name}} / {{artist.album.title}}</p>
-                        <p> {{secToMin(index)}}</p>
-                    </div>
-                    <div class="card-action">
-                        <audio controls="controls" >
-                            <source v-bind:src=urlPreviewConstructor(index)  type="audio/mp3 /">
-                        </audio>
+        <!-- <div id="search-page">
+            <div class="row">
+                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">like</i></a>
+                <a href="#">Name of the song</a>
+            </div>
+        </div> -->
 
-                        <div class="flex ">
-                            <a v-on:click="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
-                            <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
-                            <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Voir la fiche de l'artist</a>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div>
-                <div id="modal1" class="modal">
-                    <div class="modal-content">
-                        <h4>Titre : {{dataClick.title}}</h4>
-                        <a href="#">{{dataClick.title}}</a>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-                    </div>
-                </div>
-            </div> -->
             <card-container v-bind:searchresults="searchresults"></card-container>
             
             <!-- <div id="modal2" class="modal bottom-sheet">

@@ -3,14 +3,45 @@
     'use strict';
     $( document ).ready(function() {
         $('.modal').modal();
-      });
+        $('.modal').modal({
+            onCloseStart: function(){
+                console.log($('audio'));
+                $('audio').each(function(){
+                    this.pause();
+                    this.currentTime = 0;
+                });
+            }
+        });
+    });
 
-    var cardContainer ={
-        
+    var favContainer ={
         props : {
             searchresults : Array,
         },
-        template : `<div>
+        // mounted: function () {
+        // },
+        template : ``,
+        data : function() {
+            return {
+            }
+        },
+        computed : {
+        },
+        methods: {
+        },
+        // created : function(){
+            
+        // }
+    };
+
+
+    var cardContainer ={
+        props : {
+            searchresults : Array,
+        },
+        // mounted: function () {
+        // },
+        template : `<div id="search-page">
                         <div class="row">
                             <div v-for="(artist,index) in searchresults" class="col s4">
                                 <div class="card">
@@ -24,10 +55,6 @@
                                         <p> {{secToMin(index)}}</p>
                                     </div>
                                     <div class="card-action">
-                                    <!--<audio controls="controls" >
-                                            <source v-bind:src=urlPreviewConstructor(index)  type="audio/mp3 /">
-                                        </audio>-->
-
                                         <div class="flex ">
                                             <a v-on:click="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
                                             <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
@@ -47,12 +74,12 @@
                                     <h4>{{dataClick.title}}</h4>
                                     <p>Durée :  {{secToMin()}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
                                     <p>Ecouter un extrait :</p>
-                                    <audio controls="controls" v-if="dataClick.show">
-                                        <source v-bind:src=urlPreviewConstructor  type="audio/mp3 /">
+                                    <audio ref="player" controls="controls" id="preview-track" v-bind:src=urlPreviewConstructor type="audio/mp3 /" v-if="isFileATrack" >
                                     </audio>
-
                                 </div>
                                 <div class="modal-footer">
+                                    <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Voir le titre sur deezer</a>
+                                    <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Ajouter au favoris</a>
                                     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
                                 </div>
                             </div>
@@ -80,40 +107,21 @@
                     title_short : "",
                     title_version : "",
                     type : "",
-                    show : false
                 },
                 infoTrack : {
-                    // album : {},
-                    // artist : {} ,
-                    // available_countries : [] ,
-                    // bpm : 0 ,
-                    // contributors : [] ,
-                    // disk_number : 0 ,
-                    // duration  : 0 ,
-                    // explicit_lyrics : false ,
-                    // gain : 0 ,
-                    // id : 0 ,
-                    // isrc : "" ,
-                    // link : "" ,
-                    // preview : "" ,
-                    // rank : 0 ,
-                    // readable : "" ,
-                    // release_date : "" ,
-                    // share : "" ,
-                    // title : "" ,
-                    // title_short : "" ,
-                    // title_version : "" ,
-                    // track_position : 0 ,
-                    // type : ""
                 }
             }
         },
         computed : {
             urlPreviewConstructor: function(){
-                // var urlPreview = this.searchresults[index].preview;
                 var urlPreview = this.dataClick.preview;
                 return urlPreview;
             },
+            isFileATrack: function() {
+                return this.dataClick.preview.endsWith('.mp3') || 
+                        this.dataClick.preview.endsWith('.wav') || 
+                        this.dataClick.preview.endsWith('.aif') ? true : false
+            }
         },
         methods: {
             urlConstructorTrack: function(){
@@ -123,12 +131,6 @@
                 return url;
             },
             secToMin : function(){
-                // var time = this.searchresults[index].duration;
-                // var minutes = Math.floor(time / 60);
-                // var seconde = time-(minutes*60);
-                // var fulltime = minutes + "m" + seconde+ "s";
-                // return fulltime;
-
                 var time = this.dataClick.duration;
                 var minutes = Math.floor(time / 60);
                 var seconde = time-(minutes*60);
@@ -136,14 +138,11 @@
                 return fulltime;
             },
             indexCall : function(index){
-                this.dataClick.show = false;
                 this.dataClick = this.searchresults[index];
                 // var imgLink = "url('"+ this.searchresults[index].album.cover_big +"')";
                 // $('#modal1').css({background: imgLink ,opacity:'0.5'});
                 this.dataClick.show = true;
                 this.infoTrackCall(this.getReponse);
-                // this.urlPreviewConstructor();
-                
             },
             infoTrackCall : function(getReponse){
                 var urlFinal = this.urlConstructorTrack();
@@ -171,10 +170,9 @@
                 return date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
             }
         },
-
-        updated : function(){
+        // created : function(){
             
-        }
+        // }
     };
 
  var elApp = new Vue({                 //la variable me sert à refencer l'object
@@ -223,7 +221,11 @@
                         alert("votre recherche n'as pas aboutie à une resultat");
                     }
                 })
+            },
+            callFavPage : function(){
+                $('#search-page').css('display','none');
             }
         },
       })
 })();
+
