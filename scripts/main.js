@@ -14,24 +14,48 @@
         });
     });
 
+    var bus = new Vue(
+        //     {
+        //     created : function(){
+        //         bus.$on('addfav', function (addedFavSave) {
+        //             this.addfav = addedFavSave;
+        //         })
+        //     }
+        // }
+    );
+
     var favContainer ={
         props : {
-            searchresults : Array,
+            // addfavoris : Array,
         },
         // mounted: function () {
         // },
-        template : ``,
+        template : `<p>{{addfavoris}}</p>`,
         data : function() {
             return {
+                addfavoris : [],
             }
         },
         computed : {
         },
         methods: {
         },
+        // http:{
+        //     root: 'http://localhost:3000'
+        // },
         // created : function(){
-            
-        // }
+        //     bus.$on('addfavoris', function (addedFavoris) {
+        //         // this.addfavoris = addedFavSave;
+        //         console.log(addedFavoris);
+        //         // favContainer.addfavoris = addedFavoris;
+        //         console.log(favContainer.addfavoris);
+        //     })
+        // },
+        created : function(){
+            bus.$on('addfavoris', (data) => {
+                this.addfavoris = data;
+            })
+        }
     };
 
 
@@ -48,7 +72,7 @@
                                     <div class="card-image">
                                         <img v-bind:src="artist.album.cover_big">
                                         <span class="card-title">{{artist.album.title}}</span>
-                                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                        <a v-on:click="addfavoris(index)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                                     </div>
                                     <div class="card-content">
                                         <p>{{artist.artist.name}} / {{artist.album.title}}</p>
@@ -93,6 +117,7 @@
                 option: "",
                 index: 0,
                 indexSave: 0,
+                indexFav: 0,
                 dataClick: {
                     album : {},
                     artist : {},
@@ -108,6 +133,7 @@
                     title_version : "",
                     type : "",
                 },
+                addedFavoris : [],
                 infoTrack : {
                 }
             }
@@ -168,6 +194,11 @@
             convertDate : function( dateString ){
                 var date = new Date(dateString);
                 return date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
+            },
+            addfavoris : function(index){
+                this.addedFavoris[this.indexFav] = this.searchresults[index];
+                this.indexFav += 1;
+                bus.$emit('addfavoris', this.addedFavoris);
             }
         },
         // created : function(){
@@ -178,7 +209,8 @@
  var elApp = new Vue({                 //la variable me sert à refencer l'object
         el: '#app',
         components : { 
-            'card-container' : cardContainer ,    
+            'card-container' : cardContainer ,
+            'fav-container'  : favContainer,
         },
         data : {
                 PartUrl1:"https://api.deezer.com/search?q=",
@@ -188,7 +220,8 @@
                 index: 0,
                 indexSave: 0,
                 searchresults: [],
-                dataClick: {}
+                dataClick: {},
+                addedFavoris : [],
             }
         ,
         filters : {
