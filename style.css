@@ -1,16 +1,6 @@
-/* h2 {
-    font-size: 2em;
+audio{
+    width: 100%;
 }
-.card{
-    height: 43em;
-}
-.wrapper{
-    width: 60%;
-    margin: 0 auto;
-}
-
-
-*/
 .flex{
 	display: -webkit-flex;
 	display: -moz-flex;
@@ -21,6 +11,34 @@
 .card .waves-effect.waves-light.btn {
     height: initial;
 }
-audio{
-    width: 100%;
+#menu {
+    padding-left: 3%;
+}
+#favoris-page {
+    display: none;
+}
+.wrapper{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 2em;
+}
+.favoris audio{
+    width: 80%;
+}
+.favoris .flex{
+    justify-content: space-between;
+}
+input#search{
+    width: 90%;
+    color: #fff;
+}
+input#search:focus{
+    color: #2bbbad;
+}
+#search-btn{
+    width: 10%;
+    height: 100%
+}
+button p{
+    display: inline-block;
 }

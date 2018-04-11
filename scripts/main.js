@@ -15,45 +15,52 @@
     });
 
     var bus = new Vue(
-        //     {
-        //     created : function(){
-        //         bus.$on('addfav', function (addedFavSave) {
-        //             this.addfav = addedFavSave;
-        //         })
-        //     }
-        // }
     );
 
     var favContainer ={
-        props : {
-            // addfavoris : Array,
-        },
-        // mounted: function () {
-        // },
-        template : `<p>{{addfavoris}}</p>`,
+        template : `<div class="favoris wrapper" id="favoris-page">
+                        <div v-for="(artist,index) in addedFavoris">
+                            <div class="flex">
+                                <a v-on:click="removeFav(index)" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">favorite</i></a>
+                                <p>{{addedFavoris[index].title_short}}</p>
+                                <audio ref="player" controls="controls" class="preview-track" v-bind:src="urlPreviewConstructor(index)" type="audio/mp3 /" v-if="isFileATrack(index)"></audio>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>`,
         data : function() {
             return {
-                addfavoris : [],
+                addedFavoris : [],
             }
         },
         computed : {
+            
+            
         },
         methods: {
+            urlPreviewConstructor: function(index){
+                var urlPreview = this.addedFavoris[index].preview;
+                return urlPreview;
+            },
+            isFileATrack: function(index) {
+                return  this.addedFavoris[index].preview.endsWith('.mp3') || 
+                        this.addedFavoris[index].preview.endsWith('.wav') || 
+                        this.addedFavoris[index].preview.endsWith('.aif') ? true : false
+            },
+            removeFav: function(index){
+                var addedFavoris_json;
+                this.addedFavoris.splice(index,1);
+                // addedFavoris_json = JSON.stringify(this.addedFavoris);
+                // localStorage.setItem("addedFavorisStringify",addedFavoris_json);
+            }
         },
-        // http:{
-        //     root: 'http://localhost:3000'
-        // },
-        // created : function(){
-        //     bus.$on('addfavoris', function (addedFavoris) {
-        //         // this.addfavoris = addedFavSave;
-        //         console.log(addedFavoris);
-        //         // favContainer.addfavoris = addedFavoris;
-        //         console.log(favContainer.addfavoris);
-        //     })
-        // },
         created : function(){
+            // var addedFavoris_json = localStorage.getItem("addedFavorisStringify");
+            // if (this.addedFavoris ==! JSON.parse(addedFavoris_json)){
+            //     this.addedFavoris = JSON.parse(addedFavoris_json);
+            // };
             bus.$on('addfavoris', (data) => {
-                this.addfavoris = data;
+                this.addedFavoris = data;
             })
         }
     };
@@ -63,16 +70,14 @@
         props : {
             searchresults : Array,
         },
-        // mounted: function () {
-        // },
-        template : `<div id="search-page">
+        template : `<div id="search-page" class="wrapper">
                         <div class="row">
                             <div v-for="(artist,index) in searchresults" class="col s4">
                                 <div class="card">
                                     <div class="card-image">
                                         <img v-bind:src="artist.album.cover_big">
                                         <span class="card-title">{{artist.album.title}}</span>
-                                        <a v-on:click="addfavoris(index)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                        <a v-on:click="verifAddedFav(index)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                                     </div>
                                     <div class="card-content">
                                         <p>{{artist.artist.name}} / {{artist.album.title}}</p>
@@ -102,9 +107,8 @@
                                     </audio>
                                 </div>
                                 <div class="modal-footer">
-                                    <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Voir le titre sur deezer</a>
-                                    <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Ajouter au favoris</a>
-                                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                                    <a class="waves-effect waves-light btn" href="#modal2">Voir le titre sur deezer</a>
+                                    <a v-on:click="verifAddedFav()" class="waves-effect waves-light btn" href="#modal3">Ajouter au favoris</a>
                                 </div>
                             </div>
                         </div>
@@ -195,15 +199,49 @@
                 var date = new Date(dateString);
                 return date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
             },
-            addfavoris : function(index){
-                this.addedFavoris[this.indexFav] = this.searchresults[index];
-                this.indexFav += 1;
-                bus.$emit('addfavoris', this.addedFavoris);
-            }
+            addfavoris : function(index , find){
+                var addedFavoris_json;
+                if (find === false){  
+                    if(index){
+                        this.addedFavoris[this.indexFav] = this.searchresults[index];
+                        this.indexFav += 1;
+                    }
+                    else{
+                        this.addedFavoris[this.indexFav] = this.dataClick;
+                        this.indexFav += 1;
+                    };
+                    bus.$emit('addfavoris', this.addedFavoris);
+                    // addedFavoris_json = JSON.stringify(this.addedFavoris);
+                    // localStorage.setItem("addedFavorisStringify",addedFavoris_json);
+                };
+            },
+            verifAddedFav: function(index){
+                var find = false;
+  
+                for( var i = 0; i < this.addedFavoris.length ; i++){
+                    if(index){
+                        var idx1 = this.searchresults[index].album.id;
+                        if(idx1 === this.addedFavoris[i].album.id){
+                            find = true;
+                        };
+                    }
+                    else{
+                        var idx2 = this.dataClick.album.id;
+                        if(idx2 === this.addedFavoris[i].album.id){
+                            find = true;
+                        };
+                    };
+                };
+                console.log(find);
+                this.addfavoris(index , find);
+            },
         },
-        // created : function(){
-            
-        // }
+        created : function(){
+            // var addedFavoris_json = localStorage.getItem("addedFavorisStringify");
+            // if (this.addedFavoris ==! JSON.parse(addedFavoris_json)){
+            //     this.addedFavoris = JSON.parse(addedFavoris_json);
+            // };
+        }
     };
 
  var elApp = new Vue({                 //la variable me sert à refencer l'object
@@ -238,6 +276,7 @@
                 return url;
             },
             request: function(){
+                this.callSearchPage();
                 var urlFinal = this.urlConstructor();
                 $.ajax({
                     url : urlFinal,
@@ -257,6 +296,11 @@
             },
             callFavPage : function(){
                 $('#search-page').css('display','none');
+                $('#favoris-page').css('display','inherit');
+            },
+            callSearchPage : function(){
+                $('#search-page').css('display','inherit');
+                $('#favoris-page').css('display','none');
             }
         },
       })

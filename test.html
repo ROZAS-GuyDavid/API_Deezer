@@ -1,24 +1,8 @@
-request: function(){
-    var urlFinal = this.urlConstructor();
-    var requette = $.ajax(urlFinal);
-    console.log(urlFinal);
-    requette.done(function(reponse){
-        var results_json;
-        this.searchresults = reponse.data;
-        results_json = JSON.stringify(this.searchresults);               // sauvegarder dans une variable la version strigifier de mon object
-        localStorage.setItem("resultsStringify",results_json);              // sauvegarder la variable dans le localStorage
-        console.log(this.searchresults);
-        // results_json = localStorage.getItem("resultsStringify");            // dans la variable recuper la version stringifier 
-        // if (JSON.parse(results_json) === reponse.data){
-        //     this.searchresults = JSON.parse(results_json);                          // remplacer mon objet par la sauvegarde destringifier grace a parse 
-        // }
-    });
-    var results_json = localStorage.getItem("resultsStringify");            // dans la variable recuper la version stringifier 
-    if(results_json === null ){
-        this.searchresults = [];
-    }else{
-        this.searchresults = JSON.parse(results_json);
-    }
-    results_json = null;
-    console.log(results_json);
-}
+
+<div>
+    <div v-for="(artist,index) in addedFavoris" class="row">
+        <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">favorite</i></a>
+        <p>{{addedFavoris[index].title_short}}</p>
+        <audio ref="player" controls="controls" id="preview-track" v-bind:src=urlPreviewConstructor type="audio/mp3 /" v-if="isFileATrack"></audio>
+      </div>
+</div>

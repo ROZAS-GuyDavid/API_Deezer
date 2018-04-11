@@ -15,10 +15,10 @@
 
     <main id="app">
          <nav>
-            <div class="nav-wrapper">
+            <div class="nav-wrapper" id="menu">
                 <a href="#" class="brand-logo">Logo</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="#">Recherche</a></li>
+                    <li><a v-on:click.prevent="callSearchPage()" href="#">Recherche</a></li>
                     <li><a href="#">Titre</a></li>
                     <li><a href="#">Album</a></li>
                     <li><a href="artist.html">Artist</a></li>
@@ -30,9 +30,11 @@
             <div class="nav-wrapper">
                 <form>
                     <div class="input-field">
-                        <input id="search" type="search" required >
-                        <button v-on:click.prevent="request()" id="search-btn">Rechercher</button>
-                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                        <div class="flex">
+                            <input id="search" type="search" value="Quel musique recherchez vous ?" onfocus="this.value='';" required >
+                            <button class="btn waves-effect waves-light" v-on:click.prevent="request()" id="search-btn"><p>Rechercher</p><i class="material-icons right">search</i></button>
+                        </div>
+                        <label class="label-icon" for="search"></label>
                         <i class="material-icons">close</i>
                     </div>
                 </form>
