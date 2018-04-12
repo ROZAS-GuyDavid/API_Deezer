@@ -22,7 +22,8 @@
                         <h1>Vos favoris</h1>
                         <div v-for="(artist,index) in addedFavoris">
                             <div class="flex">
-                                <a v-on:click="removeFav(index)" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">favorite</i></a>
+                                <a v-on:click="removeFav(index)" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">delete_forever</i></a>
+                                <i class="material-icons">favorite</i>
                                 <p>{{addedFavoris[index].title_short}}</p>
                                 <audio ref="player" controls="controls" class="preview-track" v-bind:src="urlPreviewConstructor(index)" type="audio/mp3 /" v-if="isFileATrack(index)"></audio>
                             </div>

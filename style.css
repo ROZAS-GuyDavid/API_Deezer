@@ -29,10 +29,17 @@ audio{
     margin-top: 10em;
 }
 .favoris audio{
-    width: 80%;
+    width: 70%;
+}
+.favoris p{
+    width: 20%;
+}
+.favoris .flex > i{
+    color: #F44336;
 }
 .favoris .flex{
     justify-content: space-between;
+    align-items: center;
 }
 input#search{
     width: 90%;
