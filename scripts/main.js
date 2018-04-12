@@ -109,7 +109,7 @@
                                     </audio>
                                 </div>
                                 <div class="modal-footer">
-                                    <a class="waves-effect waves-light btn" href="#modal2">Voir le titre sur deezer</a>
+                                    <a class="waves-effect waves-light btn" v-bind:href="dataClick.link" target="_blank">Voir le titre sur deezer</a>
                                     <a v-on:click="verifAddedFav()" class="waves-effect waves-light btn" href="#modal3">Ajouter au favoris</a>
                                 </div>
                             </div>
