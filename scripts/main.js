@@ -49,21 +49,19 @@
                         this.addedFavoris[index].preview.endsWith('.aif') ? true : false
             },
             removeFav: function(index){
-                // var addedFavoris_json;
+                var addedFavoris_json;
                 this.addedFavoris.splice(index,1);
-                // addedFavoris_json = JSON.stringify(this.addedFavoris);
-                // localStorage.setItem("addedFavorisStringify",addedFavoris_json);
                 bus.$emit('remfavoris', index);
+                addedFavoris_json = JSON.stringify(this.addedFavoris);
+                localStorage.setItem("addedFavorisStringify",addedFavoris_json);
             }
         },
         created : function(){
-            // var addedFavoris_json = localStorage.getItem("addedFavorisStringify");
-            // if (this.addedFavoris ==! JSON.parse(addedFavoris_json)){
-            //     this.addedFavoris = JSON.parse(addedFavoris_json);
-            // };
             bus.$on('addfavoris', (data, index) => {
                 this.addedFavoris.splice(index, 1, data[index] );
-            })
+            });
+            var addedFavoris_json = localStorage.getItem("addedFavorisStringify");
+            this.addedFavoris = JSON.parse(addedFavoris_json);
         }
     };
 
@@ -204,7 +202,8 @@
                 return date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
             },
             addfavoris : function(index , find){
-                // var addedFavoris_json;
+                var addedFavoris_json;
+
                 if (find === false){  
                     if(index => 0){
                         this.addedFavoris.splice(this.indexFav, 1, this.searchresults[index]);
@@ -216,8 +215,8 @@
                     this.indexFav += 1;
 
                     
-                    // addedFavoris_json = JSON.stringify(this.addedFavoris);
-                    // localStorage.setItem("addedFavorisStringify",addedFavoris_json);
+                    addedFavoris_json = JSON.stringify(this.addedFavoris);
+                    localStorage.setItem("addedFavorisStringify",addedFavoris_json);
                 };
             },
             verifAddedFav: function(index){
@@ -242,14 +241,14 @@
             },
         },
         created : function(){
-            // var addedFavoris_json = localStorage.getItem("addedFavorisStringify");
-            // if (this.addedFavoris ==! JSON.parse(addedFavoris_json)){
-            //     this.addedFavoris = JSON.parse(addedFavoris_json);
-            // };
+            var addedFavoris_json = localStorage.getItem("addedFavorisStringify");
+                
             bus.$on('remfavoris', (index) => {
                 this.indexFav -=1;
                 this.addedFavoris.splice(index, 1);
-            })
+            });
+            this.addedFavoris = JSON.parse(addedFavoris_json);
+                this.indexFav = this.addedFavoris.length;
         }
     };
 
