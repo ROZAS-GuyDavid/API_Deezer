@@ -206,11 +206,11 @@
             addfavoris : function(index , find){
                 // var addedFavoris_json;
                 if (find === false){  
-                    if(index){
-                        this.addedFavoris[this.indexFav] = this.searchresults[index];
-                    }
-                    else{
-                        this.addedFavoris[this.indexFav] = this.dataClick;
+                    if(index => 0){
+                        this.addedFavoris.splice(this.indexFav, 1, this.searchresults[index]);
+                    };
+                    if(index === undefined){
+                        this.addedFavoris.splice(this.indexFav, 1, this.dataClick);
                     };
                     bus.$emit('addfavoris', this.addedFavoris, this.indexFav);
                     this.indexFav += 1;
