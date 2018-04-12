@@ -1,3 +1,9 @@
+#ma-nav{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
 audio{
     width: 100%;
 }
@@ -20,7 +26,7 @@ audio{
 .wrapper{
     width: 80%;
     margin: 0 auto;
-    margin-top: 2em;
+    margin-top: 10em;
 }
 .favoris audio{
     width: 80%;

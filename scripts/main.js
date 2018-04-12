@@ -19,6 +19,7 @@
 
     var favContainer ={
         template : `<div class="favoris wrapper" id="favoris-page">
+                        <h1>Vos favoris</h1>
                         <div v-for="(artist,index) in addedFavoris">
                             <div class="flex">
                                 <a v-on:click="removeFav(index)" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">favorite</i></a>
@@ -48,10 +49,11 @@
                         this.addedFavoris[index].preview.endsWith('.aif') ? true : false
             },
             removeFav: function(index){
-                var addedFavoris_json;
+                // var addedFavoris_json;
                 this.addedFavoris.splice(index,1);
                 // addedFavoris_json = JSON.stringify(this.addedFavoris);
                 // localStorage.setItem("addedFavorisStringify",addedFavoris_json);
+                bus.$emit('remfavoris', index);
             }
         },
         created : function(){
@@ -59,8 +61,8 @@
             // if (this.addedFavoris ==! JSON.parse(addedFavoris_json)){
             //     this.addedFavoris = JSON.parse(addedFavoris_json);
             // };
-            bus.$on('addfavoris', (data) => {
-                this.addedFavoris = data;
+            bus.$on('addfavoris', (data, index) => {
+                this.addedFavoris.splice(index, 1, data[index] );
             })
         }
     };
@@ -69,15 +71,17 @@
     var cardContainer ={
         props : {
             searchresults : Array,
+            searchpagetitle : String,
         },
         template : `<div id="search-page" class="wrapper">
+                        <h1>{{searchpagetitle}}</h1>
                         <div class="row">
                             <div v-for="(artist,index) in searchresults" class="col s4">
                                 <div class="card">
                                     <div class="card-image">
                                         <img v-bind:src="artist.album.cover_big">
                                         <span class="card-title">{{artist.album.title}}</span>
-                                        <a v-on:click="verifAddedFav(index)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                        <a v-on:click="verifAddedFav(index)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">favorite</i></a>
                                     </div>
                                     <div class="card-content">
                                         <p>{{artist.artist.name}} / {{artist.album.title}}</p>
@@ -200,17 +204,18 @@
                 return date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
             },
             addfavoris : function(index , find){
-                var addedFavoris_json;
+                // var addedFavoris_json;
                 if (find === false){  
                     if(index){
                         this.addedFavoris[this.indexFav] = this.searchresults[index];
-                        this.indexFav += 1;
                     }
                     else{
                         this.addedFavoris[this.indexFav] = this.dataClick;
-                        this.indexFav += 1;
                     };
-                    bus.$emit('addfavoris', this.addedFavoris);
+                    bus.$emit('addfavoris', this.addedFavoris, this.indexFav);
+                    this.indexFav += 1;
+
+                    
                     // addedFavoris_json = JSON.stringify(this.addedFavoris);
                     // localStorage.setItem("addedFavorisStringify",addedFavoris_json);
                 };
@@ -220,14 +225,14 @@
   
                 for( var i = 0; i < this.addedFavoris.length ; i++){
                     if(index){
-                        var idx1 = this.searchresults[index].album.id;
-                        if(idx1 === this.addedFavoris[i].album.id){
+                        var idx1 = this.searchresults[index].id;
+                        if(idx1 === this.addedFavoris[i].id){
                             find = true;
                         };
                     }
                     else{
-                        var idx2 = this.dataClick.album.id;
-                        if(idx2 === this.addedFavoris[i].album.id){
+                        var idx2 = this.dataClick.id;
+                        if(idx2 === this.addedFavoris[i].id){
                             find = true;
                         };
                     };
@@ -241,6 +246,10 @@
             // if (this.addedFavoris ==! JSON.parse(addedFavoris_json)){
             //     this.addedFavoris = JSON.parse(addedFavoris_json);
             // };
+            bus.$on('remfavoris', (index) => {
+                this.indexFav -=1;
+                this.addedFavoris.splice(index, 1);
+            })
         }
     };
 
@@ -260,6 +269,7 @@
                 searchresults: [],
                 dataClick: {},
                 addedFavoris : [],
+                searchpagetitle : ""
             }
         ,
         filters : {
@@ -288,6 +298,7 @@
                         elApp.searchresults = reponse.data;
                         console.log(this.searchresults);
                         console.log( reponse );
+                        elApp.searchpagetitle = "Votre recherche compte " + elApp.searchresults.length + " résultats!";
                     },
                     errorCallback: function( reponse ) {
                         alert("votre recherche n'as pas aboutie à une resultat");

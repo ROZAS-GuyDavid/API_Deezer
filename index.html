@@ -14,32 +14,34 @@
     
 
     <main id="app">
-         <nav>
-            <div class="nav-wrapper" id="menu">
-                <a href="#" class="brand-logo">Logo</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a v-on:click.prevent="callSearchPage()" href="#">Recherche</a></li>
-                    <li><a href="#">Titre</a></li>
-                    <li><a href="#">Album</a></li>
-                    <li><a href="artist.html">Artist</a></li>
-                    <li><a v-on:click.prevent="callFavPage()" id="favorits-btn" href="#">Favorits</a></li>
-                </ul>
-            </div>
-        </nav>
-        <nav>
-            <div class="nav-wrapper">
-                <form>
-                    <div class="input-field">
-                        <div class="flex">
-                            <input id="search" type="search" value="Quel musique recherchez vous ?" onfocus="this.value='';" required >
-                            <button class="btn waves-effect waves-light" v-on:click.prevent="request()" id="search-btn"><p>Rechercher</p><i class="material-icons right">search</i></button>
+        <div id="ma-nav">
+            <nav>
+                <div class="nav-wrapper" id="menu">
+                    <a href="#" class="brand-logo">Logo</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a v-on:click.prevent="callSearchPage()" href="#">Recherche</a></li>
+                        <li><a href="#">Album</a></li>
+                        <li><a href="artist.html">Artist</a></li>
+                        <li><a v-on:click.prevent="callFavPage()" id="favorits-btn" href="#">Favorits</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <nav>
+                <div class="nav-wrapper">
+                    <form>
+                        <div class="input-field">
+                            <div class="flex">
+                                <input id="search" type="search" value="Quel musique recherchez vous ?" onfocus="this.value='';" required >
+                                <button class="btn waves-effect waves-light" v-on:click.prevent="request()" id="search-btn"><p>Rechercher</p><i class="material-icons right">search</i></button>
+                            </div>
+                            <label class="label-icon" for="search"></label>
+                            <i class="material-icons">close</i>
                         </div>
-                        <label class="label-icon" for="search"></label>
-                        <i class="material-icons">close</i>
-                    </div>
-                </form>
-            </div>
-        </nav>
+                    </form>
+                </div>
+            </nav>
+        </div>
+         
 
         <!-- <div id="search-page">
             <div class="row">
@@ -48,8 +50,9 @@
             </div>
         </div> -->
 
-            <card-container v-bind:searchresults="searchresults"></card-container>
+            <card-container v-bind:searchresults="searchresults" v-bind:searchpagetitle="searchpagetitle"></card-container>
             <fav-container></fav-container>
+            
             
             <!-- <div id="modal2" class="modal bottom-sheet">
                 <div class="modal-content">
