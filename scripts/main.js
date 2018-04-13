@@ -10,7 +10,10 @@
                     this.pause();
                     this.currentTime = 0;
                 });
-            }
+                $('.album').css( "display" , "inherit" );
+                $('.artist').css( "display" , "none" );
+                $('.track').css( "display" , "none" );
+            },
         });
     });
 
@@ -84,12 +87,12 @@
                                     </div>
                                     <div class="card-content">
                                         <p>{{artist.artist.name}} / {{artist.album.title}}</p>
-                                        <p> {{secToMin(index)}}</p>
+                                        <p> {{secToMin(searchresults[index].duration)}}</p>
                                     </div>
                                     <div class="card-action">
                                         <div class="flex ">
-                                            <a v-on:click="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
-                                            <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
+                                            <a v-on:click.prevent="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
+                                            <a v-on:click.prevent="getAlbum(index)" class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
                                             <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Voir la fiche de l'artist</a>
                                         </div>
                                     </div>
@@ -104,9 +107,9 @@
                                     <img :src="dataClick.artist.picture_small">
                                     <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
                                     <h4>{{dataClick.title}}</h4>
-                                    <p>Durée :  {{secToMin()}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
+                                    <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
                                     <p>Ecouter un extrait :</p>
-                                    <audio ref="player" controls="controls" id="preview-track" v-bind:src=urlPreviewConstructor type="audio/mp3 /" v-if="isFileATrack" >
+                                    <audio ref="player" controls="controls" id="preview-track" v-bind:src=dataClick.preview type="audio/mp3 /" v-if="isFileATrack" >
                                     </audio>
                                 </div>
                                 <div class="modal-footer">
@@ -115,12 +118,68 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <div id="modal2" class="modal">
+                                <div class="voile">
+                                    <div class="modal-content">
+                                        <div class="album">
+                                            <h4>Album : {{dataClick.album.title}}</h4>
+                                            <p>Artist : <a v-on:click.prevent="albumRequette(dataClick.artist.id, getReponseArtist)" href="#">{{dataClick.artist.name}}</a></p>
+                                            <p>Liste des tracks de cette album</p>
+                                            <div v-if="infoAlbum.rating === 0" class="rate">
+                                                <i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i>
+                                            </div>
+                                            <div v-if="infoAlbum.rating === 1" class="rate">
+                                                <i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i>
+                                            </div>
+                                            <div v-if="infoAlbum.rating === 2" class="rate">
+                                                <i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i>
+                                            </div>
+                                            <div v-if="infoAlbum.rating === 3" class="rate">
+                                                <i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i>
+                                            </div>
+                                            <div v-if="infoAlbum.rating === 4" class="rate">
+                                                <i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i>
+                                            </div>
+                                            <div v-if="infoAlbum.rating === 5" class="rate">
+                                                <i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i>
+                                            </div>
+                                            <ul>
+                                                <li v-for="(artist,index) in infoAlbum.tracks.data">
+                                                    <a v-on:click.prevent="displayTrackPage()" href="#">{{infoAlbum.tracks.data[index].title_short}}</a>
+                                                    {{secToMin(infoAlbum.tracks.data[index].duration)}}
+                                                    <audio ref="player" controls="controls" v-bind:src=infoAlbum.tracks.data[index].preview type="audio/mp3 /" v-if="isFileATrack" ></audio>
+                                                </li>
+                                            </ul>
+                                            <div class="modal-footer">
+                                                <a class="waves-effect waves-light btn" v-bind:href="infoAlbum.link" target="_blank">Voir l'album sur deezer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="artist">
+                                        <div class="voile">
+                                            <h4>{{infoArtist.name}}</h4>
+                                            <p>Nombre d'albums : {{infoArtist.nb_album}}</p>
+                                            <p>Nombre de fans : {{infoArtist.nb_fan}}</p>
+                                            <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                        </div>
+                                    </div>
+                                    <div class="track">
+                                        <div class="voile">
+                                            <p>blaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                                            <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>`,
         data : function() {
             return {
                 PartUrl1:"https://api.deezer.com/track/",
-                PartUrl2:"",
-                finalUrl:'',
+                PartUrl2:"https://api.deezer.com/album/",
+                PartUrl3:"https://api.deezer.com/artist/",
+                // finalUrl:'',
                 option: "",
                 index: 0,
                 indexSave: 0,
@@ -141,15 +200,20 @@
                     type : "",
                 },
                 addedFavoris : [],
-                infoTrack : {
+                infoTrack : {},
+                infoTrack2 : {},
+                infoArtist : {},
+                infoAlbum : {
+                    tracks : {}
                 }
             }
         },
         computed : {
-            urlPreviewConstructor: function(){
-                var urlPreview = this.dataClick.preview;
-                return urlPreview;
-            },
+            // urlPreviewConstructor: function(){
+            //     var urlPreview = this.dataClick.preview;
+            //     return urlPreview;
+            // },
+            
             isFileATrack: function() {
                 return this.dataClick.preview.endsWith('.mp3') || 
                         this.dataClick.preview.endsWith('.wav') || 
@@ -157,24 +221,89 @@
             }
         },
         methods: {
+            displayTrackPage : function(){
+                    $('.album').css( "display" , "none" );
+                    $('.track').css( "display" , "inherit" );
+            },
+            hidePage : function(){
+                $('.album').css( "display" , "inherit" );
+                $('.artist').css( "display" , "none" );
+                $('.track').css( "display" , "none" );
+            },
+            albumRequette: function(id, getReponseArtist){
+                var urlFinal = this.urlConstructorArtist(id);
+                $.ajax({
+                    url : urlFinal,
+                    dataType : 'jsonp', // <-- Informe jQuery qu'il recevra du JSONP de la part de Deezer
+                    data : {
+                        output : 'jsonp', // <-- Indique à Deezer que le format de retour doit être du JSONP
+                    },
+                    success: function( reponse ) {
+                        getReponseArtist(reponse)
+                        return reponse;
+                    },
+                    errorCallback: function( reponse ) {
+                        alert("votre recherche n'as pas aboutie à un resultat");
+                    }
+                });
+                $('.artist').css( "display" , "inherit" );
+                $('.album').css( "display" , "none" );
+
+
+            },
+            urlConstructorArtist: function(id){
+                var url;
+                url = this.PartUrl3 + id;
+                console.log(url);
+                return url;
+            },
             urlConstructorTrack: function(){
-                var url = this.finalUrl;
+                var url;
                 url = this.PartUrl1 + this.dataClick.id;
                 console.log(url);
                 return url;
             },
-            secToMin : function(){
-                var time = this.dataClick.duration;
+            urlConstructorAlbum: function(){
+                var url;
+                url = this.PartUrl2 + this.dataClick.album.id;
+                console.log(url);
+                return url;
+            },
+            secToMin : function(time){
                 var minutes = Math.floor(time / 60);
                 var seconde = time-(minutes*60);
                 var fulltime = minutes + "m" + seconde+ "s";
                 return fulltime;
             },
+            getAlbum : function(index){
+                this.dataClick = this.searchresults[index];
+                var imgLink = "url('"+ this.dataClick.album.cover_big +"')";
+                $('#modal2').css({background: imgLink ,backgroundSize:'cover'});
+                this.AlbumCall(this.getReponseAlbum);
+            },
+            AlbumCall : function(getReponseAlbum){
+                var urlFinal = this.urlConstructorAlbum();
+                $.ajax({
+                    url : urlFinal,
+                    dataType : 'jsonp', // <-- Informe jQuery qu'il recevra du JSONP de la part de Deezer
+                    data : {
+                        output : 'jsonp', // <-- Indique à Deezer que le format de retour doit être du JSONP
+                    },
+                    success: function( reponse ) {
+                        getReponseAlbum(reponse)
+                        return reponse;
+                    },
+                    errorCallback: function( reponse ) {
+                        alert("votre recherche n'as pas aboutie à un resultat");
+                    }
+                });
+            },
             indexCall : function(index){
                 this.dataClick = this.searchresults[index];
                 // var imgLink = "url('"+ this.searchresults[index].album.cover_big +"')";
                 // $('#modal1').css({background: imgLink ,opacity:'0.5'});
-                this.dataClick.show = true;
+                
+                // this.dataClick.show = true;
                 this.infoTrackCall(this.getReponse);
             },
             infoTrackCall : function(getReponse){
@@ -193,6 +322,17 @@
                         alert("votre recherche n'as pas aboutie à un resultat");
                     }
                 });
+            },
+            getReponseArtist : function(reponse){
+                console.log(reponse);
+                this.infoArtist = reponse;
+                var imgLink = "url('"+ this.infoArtist.picture_big +"')";
+                $('#modal2 .artist').css({background: imgLink ,backgroundSize:'cover'});
+            },
+            getReponseAlbum : function(reponse){
+                console.log(reponse);
+                this.infoAlbum = reponse;
+
             },
             getReponse : function(reponse){
                 console.log(reponse);
@@ -239,6 +379,7 @@
                 };
                 console.log(find);
                 this.addfavoris(index , find);
+                //ToDo verifier aussi dans addedFavoris de la page favoris
             },
         },
         created : function(){

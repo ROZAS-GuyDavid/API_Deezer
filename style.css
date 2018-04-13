@@ -55,3 +55,26 @@ input#search:focus{
 button p{
     display: inline-block;
 }
+.rate i {
+    color: #d8b800
+}
+#modal2{
+    color: #fff;
+}
+.voile{
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 100%;
+}
+/* .visble{
+    display: inherit;
+}
+.none-visible{
+    display: none;
+} */
+.artist{
+    height: 50vw;
+    display: none;
+}
+.track{
+    display: none;
+}
