@@ -101,30 +101,33 @@
                         </div>
                         <div>
                             <div id="modal1" class="modal">
-                                <div class="modal-content">
-                                    <h4>Titre : {{dataClick.title}}</h4>
-                                    <p>Album : <a href="#">{{dataClick.album.title}}</a></p>
-                                    <img :src="dataClick.artist.picture_small">
-                                    <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
-                                    <h4>{{dataClick.title}}</h4>
-                                    <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
-                                    <p>Ecouter un extrait :</p>
-                                    <audio ref="player" controls="controls" id="preview-track" v-bind:src=dataClick.preview type="audio/mp3 /" v-if="isFileATrack" >
-                                    </audio>
-                                </div>
-                                <div class="modal-footer">
-                                    <a class="waves-effect waves-light btn" v-bind:href="dataClick.link" target="_blank">Voir le titre sur deezer</a>
-                                    <a v-on:click="verifAddedFav()" class="waves-effect waves-light btn" href="#modal3">Ajouter au favoris</a>
+                                <div class="voile">
+                                    <div class="modal-content">
+                                        <div>
+                                            <h4>Titre : {{dataClick.title}}</h4>
+                                            <p>Album : <a href="#">{{dataClick.album.title}}</a></p>
+                                            <img :src="dataClick.artist.picture_small">
+                                            <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
+                                            <h4>{{dataClick.title}}</h4>
+                                            <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
+                                            <p>Ecouter un extrait :</p>
+                                            <audio ref="player" controls="controls" id="preview-track" v-bind:src=dataClick.preview type="audio/mp3 /" v-if="isFileATrack" ></audio>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a class="waves-effect waves-light btn" v-bind:href="dataClick.link" target="_blank">Voir le titre sur deezer</a>
+                                        <a v-on:click="verifAddedFav()" class="waves-effect waves-light btn" href="#">Ajouter au favoris</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <div id="modal2" class="modal">
                                 <div class="voile">
-                                    <div class="modal-content">
-                                        <div class="album">
-                                            <h4>Album : {{dataClick.album.title}}</h4>
-                                            <p>Artist : <a v-on:click.prevent="albumRequette(dataClick.artist.id, getReponseArtist)" href="#">{{dataClick.artist.name}}</a></p>
+                                    <div class="album">
+                                        <div class="modal-content">
+                                            <h4>Album : {{infoAlbum.title}}</h4>
+                                            <p>Artist : <a v-on:click.prevent="albumRequette(infoAlbum.artist.id, getReponseArtist)" href="#">{{infoAlbum.artist.name}}</a></p>
                                             <p>Liste des tracks de cette album</p>
                                             <div v-if="infoAlbum.rating === 0" class="rate">
                                                 <i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i>
@@ -145,31 +148,49 @@
                                                 <i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i>
                                             </div>
                                             <ul>
-                                                <li v-for="(artist,index) in infoAlbum.tracks.data">
-                                                    <a v-on:click.prevent="displayTrackPage()" href="#">{{infoAlbum.tracks.data[index].title_short}}</a>
+                                                <li v-for="(artist,index) in infoAlbum.tracks.data" class="flex">
                                                     {{secToMin(infoAlbum.tracks.data[index].duration)}}
+                                                    <a v-on:click.prevent="displayTrackPage(index)" href="#">{{infoAlbum.tracks.data[index].title_short}}</a>
                                                     <audio ref="player" controls="controls" v-bind:src=infoAlbum.tracks.data[index].preview type="audio/mp3 /" v-if="isFileATrack" ></audio>
                                                 </li>
                                             </ul>
-                                            <div class="modal-footer">
-                                                <a class="waves-effect waves-light btn" v-bind:href="infoAlbum.link" target="_blank">Voir l'album sur deezer</a>
-                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="waves-effect waves-light btn" v-bind:href="infoAlbum.link" target="_blank">Voir l'album sur deezer</a>
                                         </div>
                                     </div>
+
                                     <div class="artist">
                                         <div class="voile">
-                                            <h4>{{infoArtist.name}}</h4>
-                                            <p>Nombre d'albums : {{infoArtist.nb_album}}</p>
-                                            <p>Nombre de fans : {{infoArtist.nb_fan}}</p>
-                                            <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                            <div class="modal-content">
+                                                <h4>{{infoArtist.name}}</h4>
+                                                <p>Nombre d'albums : {{infoArtist.nb_album}}</p>
+                                                <p>Nombre de fans : {{infoArtist.nb_fan}}</p>
+                                                <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="track">
                                         <div class="voile">
-                                            <p>blaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-                                            <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                            <div class="modal-content">
+                                                <h4>Titre : {{dataClick.title}}</h4>
+                                                <p>Album : <a href="#">{{dataClick.album.title}}</a></p>
+                                                <img :src="dataClick.artist.picture_small">
+                                                <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
+                                                <h4>{{dataClick.title}}</h4>
+                                                <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
+                                                <p>Ecouter un extrait :</p>
+                                                <audio ref="player" controls="controls" id="preview-track" v-bind:src=dataClick.preview type="audio/mp3 /" v-if="isFileATrack" >
+                                                </audio>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="waves-effect waves-light btn" v-bind:href="dataClick.link" target="_blank">Voir le titre sur deezer</a>
+                                                <a v-on:click="verifAddedFav(indexTrack)" class="waves-effect waves-light btn" href="#">Ajouter au favoris</a>
+                                                <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                            </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -184,6 +205,7 @@
                 index: 0,
                 indexSave: 0,
                 indexFav: 0,
+                indexTrack: 0,
                 dataClick: {
                     album : {},
                     artist : {},
@@ -204,7 +226,10 @@
                 infoTrack2 : {},
                 infoArtist : {},
                 infoAlbum : {
-                    tracks : {}
+                    artist : {},
+                    tracks : {
+                        data: [Object]
+                    }
                 }
             }
         },
@@ -221,7 +246,22 @@
             }
         },
         methods: {
-            displayTrackPage : function(){
+            displayTrackPage : function(index){
+                    this.dataClick.album = this.infoAlbum;
+                    this.dataClick.artist = this.infoAlbum.artist;
+                    this.dataClick.duration = this.infoAlbum.tracks.data[index].duration;
+                    this.dataClick.explicit_lyrics = this.infoAlbum.tracks.data[index].explicit_lyrics;
+                    this.dataClick.id = this.infoAlbum.tracks.data[index].id;
+                    this.dataClick.link = this.infoAlbum.tracks.data[index].link;
+                    this.dataClick.preview = this.infoAlbum.tracks.data[index].preview;
+                    this.dataClick.rank = this.infoAlbum.tracks.data[index].rank;
+                    this.dataClick.readable = this.infoAlbum.tracks.data[index].readable;
+                    this.dataClick.title = this.infoAlbum.tracks.data[index].title;
+                    this.dataClick.title_short = this.infoAlbum.tracks.data[index].title_short;
+                    this.dataClick.title_version = this.infoAlbum.tracks.data[index].title_version;
+                    this.dataClick.type = this.infoAlbum.tracks.data[index].type;
+                    this.indexTrack = index;
+
                     $('.album').css( "display" , "none" );
                     $('.track').css( "display" , "inherit" );
             },
@@ -229,6 +269,10 @@
                 $('.album').css( "display" , "inherit" );
                 $('.artist').css( "display" , "none" );
                 $('.track').css( "display" , "none" );
+                $('audio').each(function(){
+                    this.pause();
+                    this.currentTime = 0;
+                });
             },
             albumRequette: function(id, getReponseArtist){
                 var urlFinal = this.urlConstructorArtist(id);
@@ -300,8 +344,8 @@
             },
             indexCall : function(index){
                 this.dataClick = this.searchresults[index];
-                // var imgLink = "url('"+ this.searchresults[index].album.cover_big +"')";
-                // $('#modal1').css({background: imgLink ,opacity:'0.5'});
+                var imgLink = "url('"+ this.searchresults[index].album.cover_big +"')";
+                $('#modal1').css({background: imgLink ,backgroundSize:'cover'});
                 
                 // this.dataClick.show = true;
                 this.infoTrackCall(this.getReponse);
