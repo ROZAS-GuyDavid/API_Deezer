@@ -11,8 +11,10 @@
                     this.currentTime = 0;
                 });
                 $('.album').css( "display" , "inherit" );
-                $('.artist').css( "display" , "none" );
-                $('.track').css( "display" , "none" );
+                $('.artist').css( "display" , "inherit" );
+                $('.artist2').css( "display" , "none" );
+                $('.track').css( "display" , "inherit" );
+                $('.track2').css( "display" , "none" );
             },
         });
     });
@@ -91,9 +93,9 @@
                                     </div>
                                     <div class="card-action">
                                         <div class="flex ">
-                                            <a v-on:click.prevent="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
-                                            <a v-on:click.prevent="getAlbum(index)" class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
-                                            <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Voir la fiche de l'artist</a>
+                                            <a id="call-track-modal" v-on:click.prevent="indexCall(index)" class="waves-effect waves-light btn modal-trigger" href="#modal1">Ecouter un extrait</a>
+                                            <a id="call-album-modal" v-on:click.prevent="getAlbum(index)" class="waves-effect waves-light btn modal-trigger" href="#modal2">Consulter Album</a>
+                                            <a id="call-artist-modal" v-on:click.prevent="openArtist(index)" class="waves-effect waves-light btn modal-trigger" href="#modal3">Voir la fiche de l'artist</a>
                                         </div>
                                     </div>
                                 </div>
@@ -102,21 +104,34 @@
                         <div>
                             <div id="modal1" class="modal">
                                 <div class="voile">
-                                    <div class="modal-content">
-                                        <div>
-                                            <h4>Titre : {{dataClick.title}}</h4>
-                                            <p>Album : <a href="#">{{dataClick.album.title}}</a></p>
-                                            <img :src="dataClick.artist.picture_small">
-                                            <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
-                                            <h4>{{dataClick.title}}</h4>
-                                            <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
-                                            <p>Ecouter un extrait :</p>
-                                            <audio ref="player" controls="controls" id="preview-track" v-bind:src=dataClick.preview type="audio/mp3 /" v-if="isFileATrack" ></audio>
+                                    <div class="track">
+                                        <div class="modal-content">
+                                            <div>
+                                                <h4>Titre : {{dataClick.title}}</h4>
+                                                <p>Album : <a v-on:click.prevent="openAlbum()" class="modal-action modal-close modal-trigger " href="#modal2">{{dataClick.album.title}}</a></p>
+                                                <img :src="dataClick.artist.picture_medium">
+                                                <p>Artist : <a v-on:click.prevent="openArtist(indexClick)" href="#">{{dataClick.artist.name}}</a></p>
+                                                <h4>{{dataClick.title}}</h4>
+                                                <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
+                                                <p>Ecouter un extrait :</p>
+                                                <audio ref="player" controls="controls" id="preview-track" v-bind:src=dataClick.preview type="audio/mp3 /" v-if="isFileATrack" ></audio>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="waves-effect waves-light btn" v-bind:href="dataClick.link" target="_blank">Voir le titre sur deezer</a>
+                                            <a v-on:click="verifAddedFav()" class="waves-effect waves-light btn" href="#">Ajouter au favoris</a>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <a class="waves-effect waves-light btn" v-bind:href="dataClick.link" target="_blank">Voir le titre sur deezer</a>
-                                        <a v-on:click="verifAddedFav()" class="waves-effect waves-light btn" href="#">Ajouter au favoris</a>
+                                    <div class="artist2">
+                                        <div class="voile">
+                                            <div class="modal-content">
+                                                <h4>{{infoArtist.name}}</h4>
+                                                <img :src="dataClick.artist.picture_medium">
+                                                <p>Nombre d'albums : {{infoArtist.nb_album}}</p>
+                                                <p>Nombre de fans : {{infoArtist.nb_fan}}</p>
+                                                <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +142,7 @@
                                     <div class="album">
                                         <div class="modal-content">
                                             <h4>Album : {{infoAlbum.title}}</h4>
-                                            <p>Artist : <a v-on:click.prevent="albumRequette(infoAlbum.artist.id, getReponseArtist)" href="#">{{infoAlbum.artist.name}}</a></p>
-                                            <p>Liste des tracks de cette album</p>
+                                            <p>Artist : <a v-on:click.prevent="openArtist(indexClick)" href="#">{{dataClick.artist.name}}</a></p>
                                             <div v-if="infoAlbum.rating === 0" class="rate">
                                                 <i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i>
                                             </div>
@@ -147,6 +161,7 @@
                                             <div v-if="infoAlbum.rating === 5" class="rate">
                                                 <i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i>
                                             </div>
+                                            <p>Liste des tracks de cette album :</p>
                                             <ul>
                                                 <li v-for="(artist,index) in infoAlbum.tracks.data" class="flex">
                                                     {{secToMin(infoAlbum.tracks.data[index].duration)}}
@@ -160,23 +175,24 @@
                                         </div>
                                     </div>
 
-                                    <div class="artist">
+                                    <div class="artist2">
                                         <div class="voile">
                                             <div class="modal-content">
                                                 <h4>{{infoArtist.name}}</h4>
+                                                <img :src="dataClick.artist.picture_medium">
                                                 <p>Nombre d'albums : {{infoArtist.nb_album}}</p>
                                                 <p>Nombre de fans : {{infoArtist.nb_fan}}</p>
                                                 <button class="btn waves-effect waves-light" v-on:click.prevent="hidePage()"><p>Retour</p><i class="material-icons right">reply</i></button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="track">
+                                    <div class="track2">
                                         <div class="voile">
                                             <div class="modal-content">
                                                 <h4>Titre : {{dataClick.title}}</h4>
-                                                <p>Album : <a href="#">{{dataClick.album.title}}</a></p>
-                                                <img :src="dataClick.artist.picture_small">
-                                                <p>Artist : <a href="#">{{dataClick.artist.name}}</a></p>
+                                                <p>Album : <a v-on:click.prevent="openAlbum()" class="modal-action modal-close modal-trigger " href="#modal2">{{dataClick.album.title}}</a></p>
+                                                <img :src="dataClick.artist.picture_medium">
+                                                <p>Artist : <a v-on:click.prevent="openArtist(indexClick)" href="#">{{dataClick.artist.name}}</a></p>
                                                 <h4>{{dataClick.title}}</h4>
                                                 <p>Durée :  {{secToMin(dataClick.duration)}} / Date de parution : {{convertDate(infoTrack.release_date)}}</p>
                                                 <p>Ecouter un extrait :</p>
@@ -190,7 +206,20 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div id="modal3" class="modal">
+                                <div class="voile">
+                                    <div class="artist">
+                                        <div class="modal-content">
+                                            <h4>{{infoArtist.name}}</h4>
+                                            <img :src="dataClick.artist.picture_medium">
+                                            <p>Nombre d'albums : {{infoArtist.nb_album}}</p>
+                                            <p>Nombre de fans : {{infoArtist.nb_fan}}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -206,6 +235,7 @@
                 indexSave: 0,
                 indexFav: 0,
                 indexTrack: 0,
+                indexClick: 0,
                 dataClick: {
                     album : {},
                     artist : {},
@@ -246,6 +276,24 @@
             }
         },
         methods: {
+            openAlbum : function(){
+                this.getAlbum(this.indexClick);
+            },
+            openArtist : function(index){
+                this.indexCall(index);
+                $('.artist2').css( "display" , "inherit" );
+                $('.album').css( "display" , "none" );
+                $('.track').css( "display" , "none" );
+                $('.track2').css( "display" , "none" );
+                var imgLink = "url('"+ this.dataClick.album.cover_big +"')";
+                $('#modal3').css({background: imgLink ,backgroundSize:'cover'});
+            },
+            openTrack : function(index){
+                this.indexCall(index);
+                $('.track').css( "display" , "inherit" );
+                $('.artist2').css( "display" , "none" );
+                $('.album').css( "display" , "none" );
+            },
             displayTrackPage : function(index){
                     this.dataClick.album = this.infoAlbum;
                     this.dataClick.artist = this.infoAlbum.artist;
@@ -263,12 +311,14 @@
                     this.indexTrack = index;
 
                     $('.album').css( "display" , "none" );
-                    $('.track').css( "display" , "inherit" );
+                    $('.track2').css( "display" , "inherit" );
             },
             hidePage : function(){
                 $('.album').css( "display" , "inherit" );
-                $('.artist').css( "display" , "none" );
-                $('.track').css( "display" , "none" );
+                $('.artist').css( "display" , "inherit" );
+                $('.artist2').css( "display" , "none" );
+                $('.track').css( "display" , "inherit" );
+                $('.track2').css( "display" , "none" );
                 $('audio').each(function(){
                     this.pause();
                     this.currentTime = 0;
@@ -290,8 +340,9 @@
                         alert("votre recherche n'as pas aboutie à un resultat");
                     }
                 });
-                $('.artist').css( "display" , "inherit" );
-                $('.album').css( "display" , "none" );
+                // $('.artist2').css( "display" , "inherit" );
+                // $('.album').css( "display" , "none" );
+                // $('.track').css( "display" , "none" );
 
 
             },
@@ -320,6 +371,7 @@
                 return fulltime;
             },
             getAlbum : function(index){
+                this.indexClick = index;
                 this.dataClick = this.searchresults[index];
                 var imgLink = "url('"+ this.dataClick.album.cover_big +"')";
                 $('#modal2').css({background: imgLink ,backgroundSize:'cover'});
@@ -343,12 +395,14 @@
                 });
             },
             indexCall : function(index){
+                this.indexClick = index;
                 this.dataClick = this.searchresults[index];
                 var imgLink = "url('"+ this.searchresults[index].album.cover_big +"')";
                 $('#modal1').css({background: imgLink ,backgroundSize:'cover'});
                 
                 // this.dataClick.show = true;
                 this.infoTrackCall(this.getReponse);
+                this.albumRequette(this.dataClick.artist.id, this.getReponseArtist);
             },
             infoTrackCall : function(getReponse){
                 var urlFinal = this.urlConstructorTrack();

@@ -75,12 +75,14 @@ button p{
 .none-visible{
     display: none;
 } */
-.artist{
-    height: 50vh;
+.artist2{
     display: none;
+}
+.artist, .artist2{
+    height: 50vh;
     text-align: center;
 }
-.track{
+.track2{
     display: none;
 }
 .modal .modal-footer {
@@ -102,4 +104,7 @@ button p{
 .modal a {
     font-weight: bold;
     color: teal;
+}
+.artist img, .artist2 img {
+    border-radius: 50%;
 }
