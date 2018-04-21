@@ -527,23 +527,14 @@
             },
             trie : function(){
                 if($('.select-trie')[0].value === "trieAlbum"){
-                    // var i = 0;
-                    // var searchresultsSave = {}; 
-                    // var comp1 = ""; 
-                    // var comp2 = ""; 
-                    // var  test = 25;
-                    // for(var i = test; i>0; i--){
-                    //     // console.log(i);
-                    //     comp1 = this.searchresults[i].album.title;
-                    //     comp2 = this.searchresults[i-1].album.title;
-                    //     if (comp1 > comp2){
-                    //         // searchresultsSave = this.searchresults[i-1];
-                    //         // this.searchresults.splice((i-1), 1, this.searchresults[i] );
-                    //         // this.searchresults.splice(i, 1, searchresultsSave );
-                    //         // console.log("true");
-                    //         console.log(i);
-                    //     };
-                    //   };
+                    this.searchresults.sort(function(a, b){
+                        var nameA=a.album.title.toLowerCase(), nameB=b.album.title.toLowerCase()
+                        if (nameA < nameB) //sort string ascending
+                            return -1 
+                        if (nameA > nameB)
+                            return 1
+                        return 0 //default return value (no sorting)
+                    })
                 };
                 if($('.select-trie')[0].value === "trieArtist"){
                     alert('blro');
