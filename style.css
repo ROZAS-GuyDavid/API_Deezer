@@ -42,11 +42,15 @@ audio{
     align-items: center;
 }
 input#search{
-    width: 90%;
+    width: 80%;
     color: #fff;
 }
 input#search:focus{
     color: #2bbbad;
+}
+.select-trie {
+    display: initial;
+    width: 10%;
 }
 #search-btn{
     width: 10%;

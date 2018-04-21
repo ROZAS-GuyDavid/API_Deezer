@@ -462,7 +462,7 @@
                 var find = false;
   
                 for( var i = 0; i < this.addedFavoris.length ; i++){
-                    if(index){
+                    if(index || index === 0){
                         var idx1 = this.searchresults[index].id;
                         if(idx1 === this.addedFavoris[i].id){
                             find = true;
@@ -508,7 +508,8 @@
                 searchresults: [],
                 dataClick: {},
                 addedFavoris : [],
-                searchpagetitle : ""
+                searchpagetitle : "",
+                orderOption : "",
             }
         ,
         filters : {
@@ -523,6 +524,39 @@
                     console.log(url);
                 }
                 return url;
+            },
+            trie : function(){
+                if($('.select-trie')[0].value === "trieAlbum"){
+                    // var i = 0;
+                    // var searchresultsSave = {}; 
+                    // var comp1 = ""; 
+                    // var comp2 = ""; 
+                    // var  test = 25;
+                    // for(var i = test; i>0; i--){
+                    //     // console.log(i);
+                    //     comp1 = this.searchresults[i].album.title;
+                    //     comp2 = this.searchresults[i-1].album.title;
+                    //     if (comp1 > comp2){
+                    //         // searchresultsSave = this.searchresults[i-1];
+                    //         // this.searchresults.splice((i-1), 1, this.searchresults[i] );
+                    //         // this.searchresults.splice(i, 1, searchresultsSave );
+                    //         // console.log("true");
+                    //         console.log(i);
+                    //     };
+                    //   };
+                };
+                if($('.select-trie')[0].value === "trieArtist"){
+                    alert('blro');
+                };
+                if($('.select-trie')[0].value === "trieMusique"){
+
+                };
+                if($('.select-trie')[0].value === "triePop"){
+
+                };
+                if($('.select-trie')[0].value === "trieNote"){
+
+                };
             },
             request: function(){
                 this.callSearchPage();

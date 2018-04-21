@@ -32,6 +32,14 @@
                         <div class="input-field">
                             <div class="flex">
                                 <input id="search" type="search" value="Quel musique recherchez vous ?" onfocus="this.value='';" required >
+                                <select v-on:change="trie()" v-model="orderOption" class="select-trie">
+                                    <option value="" disabled selected>Trier par...</option>
+                                    <option value="trieAlbum">Album</option>
+                                    <option value="trieArtist">Artist</option>
+                                    <option value="trieMusique">Musique</option>
+                                    <option value="triePop">Les plus populaires</option>
+                                    <option value="trieNote">Les mieux notés</option>
+                                </select>
                                 <button class="btn waves-effect waves-light" v-on:click.prevent="request()" id="search-btn"><p>Rechercher</p><i class="material-icons right">search</i></button>
                             </div>
                             <label class="label-icon" for="search"></label>
