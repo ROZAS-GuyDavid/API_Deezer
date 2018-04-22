@@ -40,10 +40,6 @@
                 addedFavoris : [],
             }
         },
-        computed : {
-            
-            
-        },
         methods: {
             urlPreviewConstructor: function(index){
                 var urlPreview = this.addedFavoris[index].preview;
@@ -229,10 +225,6 @@
                 PartUrl1:"https://api.deezer.com/track/",
                 PartUrl2:"https://api.deezer.com/album/",
                 PartUrl3:"https://api.deezer.com/artist/",
-                // finalUrl:'',
-                option: "",
-                index: 0,
-                indexSave: 0,
                 indexFav: 0,
                 indexTrack: 0,
                 indexClick: 0,
@@ -264,11 +256,6 @@
             }
         },
         computed : {
-            // urlPreviewConstructor: function(){
-            //     var urlPreview = this.dataClick.preview;
-            //     return urlPreview;
-            // },
-            
             isFileATrack: function() {
                 return this.dataClick.preview.endsWith('.mp3') || 
                         this.dataClick.preview.endsWith('.wav') || 
@@ -295,23 +282,23 @@
                 $('.album').css( "display" , "none" );
             },
             displayTrackPage : function(index){
-                    this.dataClick.album = this.infoAlbum;
-                    this.dataClick.artist = this.infoAlbum.artist;
-                    this.dataClick.duration = this.infoAlbum.tracks.data[index].duration;
-                    this.dataClick.explicit_lyrics = this.infoAlbum.tracks.data[index].explicit_lyrics;
-                    this.dataClick.id = this.infoAlbum.tracks.data[index].id;
-                    this.dataClick.link = this.infoAlbum.tracks.data[index].link;
-                    this.dataClick.preview = this.infoAlbum.tracks.data[index].preview;
-                    this.dataClick.rank = this.infoAlbum.tracks.data[index].rank;
-                    this.dataClick.readable = this.infoAlbum.tracks.data[index].readable;
-                    this.dataClick.title = this.infoAlbum.tracks.data[index].title;
-                    this.dataClick.title_short = this.infoAlbum.tracks.data[index].title_short;
-                    this.dataClick.title_version = this.infoAlbum.tracks.data[index].title_version;
-                    this.dataClick.type = this.infoAlbum.tracks.data[index].type;
-                    this.indexTrack = index;
+                this.dataClick.album = this.infoAlbum;
+                this.dataClick.artist = this.infoAlbum.artist;
+                this.dataClick.duration = this.infoAlbum.tracks.data[index].duration;
+                this.dataClick.explicit_lyrics = this.infoAlbum.tracks.data[index].explicit_lyrics;
+                this.dataClick.id = this.infoAlbum.tracks.data[index].id;
+                this.dataClick.link = this.infoAlbum.tracks.data[index].link;
+                this.dataClick.preview = this.infoAlbum.tracks.data[index].preview;
+                this.dataClick.rank = this.infoAlbum.tracks.data[index].rank;
+                this.dataClick.readable = this.infoAlbum.tracks.data[index].readable;
+                this.dataClick.title = this.infoAlbum.tracks.data[index].title;
+                this.dataClick.title_short = this.infoAlbum.tracks.data[index].title_short;
+                this.dataClick.title_version = this.infoAlbum.tracks.data[index].title_version;
+                this.dataClick.type = this.infoAlbum.tracks.data[index].type;
+                this.indexTrack = index;
 
-                    $('.album').css( "display" , "none" );
-                    $('.track2').css( "display" , "inherit" );
+                $('.album').css( "display" , "none" );
+                $('.track2').css( "display" , "inherit" );
             },
             hidePage : function(){
                 $('.album').css( "display" , "inherit" );
@@ -340,11 +327,6 @@
                         alert("votre recherche n'as pas aboutie à un resultat");
                     }
                 });
-                // $('.artist2').css( "display" , "inherit" );
-                // $('.album').css( "display" , "none" );
-                // $('.track').css( "display" , "none" );
-
-
             },
             urlConstructorArtist: function(id){
                 var url;
@@ -500,23 +482,20 @@
         },
         data : {
                 PartUrl1:"https://api.deezer.com/search?q=",
-                PartUrl2:"",
-                finalUrl:'',
-                option: "",
-                index: 0,
-                indexSave: 0,
+                // finalUrl:'',
+                // option: "",
+                // index: 0,
+                // indexSave: 0,
                 searchresults: [],
-                dataClick: {},
-                addedFavoris : [],
+                // dataClick: {},
+                // addedFavoris : [],
                 searchpagetitle : "",
                 orderOption : "",
             }
         ,
-        filters : {
-        },
         methods: {
             urlConstructor: function(){
-                var url = this.finalUrl;
+                var url;
                 if($('#search').val()===""){
                     console.log("enter a value");
                 }else{
@@ -528,25 +507,57 @@
             trie : function(){
                 if($('.select-trie')[0].value === "trieAlbum"){
                     this.searchresults.sort(function(a, b){
-                        var nameA=a.album.title.toLowerCase(), nameB=b.album.title.toLowerCase()
-                        if (nameA < nameB) //sort string ascending
+                        var compA=a.album.title.toLowerCase(), compB=b.album.title.toLowerCase()
+                        if (compA < compB) //sort string ascending
                             return -1 
-                        if (nameA > nameB)
+                        if (compA > compB)
                             return 1
                         return 0 //default return value (no sorting)
                     })
                 };
                 if($('.select-trie')[0].value === "trieArtist"){
-                    alert('blro');
+                    this.searchresults.sort(function(a, b){
+                        var compA=a.artist.name.toLowerCase(), compB=b.artist.name.toLowerCase()
+                        if (compA < compB) //sort string ascending
+                            return -1 
+                        if (compA > compB)
+                            return 1
+                        return 0 //default return value (no sorting)
+                    })
                 };
                 if($('.select-trie')[0].value === "trieMusique"){
-
+                    this.searchresults.sort(function(a, b){
+                        var compA=a.title.toLowerCase(), compB=b.title.toLowerCase()
+                        if (compA < compB) //sort string ascending
+                            return -1 
+                        if (compA > compB)
+                            return 1
+                        return 0 //default return value (no sorting)
+                    })
                 };
                 if($('.select-trie')[0].value === "triePop"){
-
+                    this.searchresults.sort(function(a, b){
+                        var compA=a.rank, compB=b.rank
+                        if (compA == compB) { return 0; }
+                        if (compA < compB){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+                    })
                 };
                 if($('.select-trie')[0].value === "trieNote"){
-
+                    this.searchresults.sort(function(a, b){
+                        var compA=a.rank, compB=b.rank         // il n'y a pas de note de musique disponible dans les variable de l'API deezer
+                        if (compA == compB) { return 0; }
+                        if (compA < compB){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+                    })
                 };
             },
             request: function(){

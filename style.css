@@ -51,6 +51,7 @@ input#search:focus{
 .select-trie {
     display: initial;
     width: 10%;
+    height: 64px;
 }
 #search-btn{
     width: 10%;
@@ -73,12 +74,6 @@ button p{
     background-color: rgba(255, 255, 255, 0.7);
     height: 100%;
 }
-/* .visble{
-    display: inherit;
-}
-.none-visible{
-    display: none;
-} */
 .artist2{
     display: none;
 }
@@ -92,12 +87,6 @@ button p{
 .modal .modal-footer {
     background: none;
 }
-/* .modal .modal-content {
-    padding: 0;
-}
-.modal .modal-content > div{
-    padding: 24px;
-} */
 .album ul li audio {
     width: 75%;
 }
